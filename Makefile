@@ -6,6 +6,8 @@ all: $(OBJDIR)/build.ninja
 
 clean:
 	rm -rf $(OBJDIR)
+realclean: clean
+	rm -rf *.img emu .ninja_*
 
 lua-files = $(shell find . -name 'build*.lua')
 $(OBJDIR)/build.ninja: build/ackbuilder.lua build/cpm.lua Makefile $(lua-files)
