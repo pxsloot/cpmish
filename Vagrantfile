@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 #
-# This builds a ubuntu cpmis development vm
+# This builds a ubuntu cpmish development vm
 # All necessary tools and libraries are provided
 # The provision step installs dev tools and builds
 # and install 'ack' from source. Default platform
@@ -27,7 +27,7 @@ vm_timezone="Europe/Amsterdam"
 
 Vagrant.configure("2") do |config|
   config.vm.define vm_name do |config|
-    config.vm.box = "ubuntu/xenial64"
+    config.vm.box = "generic/ubuntu1604"
 
     # setup for virtualbox and libvirt
     config.vm.provider :virtualbox do |vbox, override|
@@ -57,10 +57,9 @@ Vagrant.configure("2") do |config|
             netpbm lua5.1 lua-posix libz80ex-dev \
             cpmtools libreadline-dev
       cd /tmp
-      # don't download ack source, don't unzip when they already exist
-      [[ -f ack.zip ]] || curl -L https://github.com/davidgiven/ack/archive/default.zip > ack.zip
-      [[ -d ack-default ]] || unzip ack.zip
-      cd /tmp/ack-default
+      rm -rf ack ack-default ack-build ack.zip
+      git clone --depth=1 https://github.com/davidgiven/ack.git
+      cd ack
       sed -i 's/DEFAULT_PLATFORM = pc86/DEFAULT_PLATFORM = cpm/' Makefile
       make +ack-cpm && make install
     SHELL
